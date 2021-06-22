@@ -1,0 +1,66 @@
+name: ClicSante 2nd Dose Check
+
+on:
+  schedule:
+    - cron: '*/20 * * * *'
+
+  workflow_dispatch:
+
+jobs:
+  # cron:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      body: ${{ steps.step1.outputs.body }}
+    steps:
+      - name: Ping appointment
+        id: step1
+        run: |
+          echo "::set-output name=body:: \
+          curl --request POST \
+          --url 'https://api3.clicsante.ca/v3/appointments/jobs' \
+          --header 'Authorization: Basic {{ secrets.BASIC_TOKEN }}' \
+          --data-raw '{"nam": "CABM91101016", "phone": "5146901734"}'"
+          
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - name: Echo body
+        run: echo ${{ needs.job1.outputs.body }}
+      
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3.2.0
+        with:
+          # SMTP server address
+          server_address: '{{ secrets.EMAIL_SMTP_SERVER }}'
+          # SMTP server port
+          server_port: '{{ secrets.EMAIL_PORT }}'
+          # Authenticate as this user to SMTP server
+          username: '{{ secrets.EMAIL }}'
+          # Authenticate with this password to SMTP server
+          password: '{{ secrets.EMAIL_PASSWORD }}'
+          # Subject of mail message
+          subject: Vaccine 2nd Dose Ping
+          # Recipients mail addresses (separated with comma)
+          to: '{{ secrets.EMAIL_TO }}'
+          # Full name of mail sender (might be with an email address specified in <>)
+          from: Dose Ping<dose.ping@mikecabana.com>
+          # Whether this connection use TLS (default is true if server_port is 465)
+          secure: true
+          # Body of mail message (might be a filename prefixed with file:// to read from)
+          body: ${{ needs.job1.outputs.body }}
+          # HTML body of mail message (might be a filename prefixed with file:// to read from)
+          # html_body: # optional
+          # Carbon copy recipients (separated with comma)
+          # cc: # optional
+          # Blind carbon copy recipients (separated with comma)
+          # bcc: # optional
+          # An email address that will appear on the Reply-To field
+          reply_to: noreply@mikecabana.com
+          # Allow unsigned/invalid certificates
+          # ignore_cert: # optional
+          # Convert body from Markdown to HTML (set content_type input as text/html too)
+          # convert_markdown: # optional
+          # Files that will be added to mail message attachments (separated with comma)
+          # attachments: # optional
