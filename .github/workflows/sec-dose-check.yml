@@ -28,6 +28,7 @@ jobs:
         id: step2
         run: |
           echo "${{ steps.step1.outputs.body }}"
+          echo "${{ fromJson(steps.step1.outputs.body).status }}"
           
 #   job2:
 #     runs-on: ubuntu-latest
