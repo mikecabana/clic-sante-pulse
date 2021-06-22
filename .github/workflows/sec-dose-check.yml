@@ -24,11 +24,17 @@ jobs:
           echo $response
           echo "::set-output name=body::$response"
           
-      - name: Echo output
+      - name: Set status
         id: step2
         run: |
-          echo "${{ steps.step1.outputs.body }}"
-          echo "${{ fromJson(steps.step1.outputs.body).status }}"
+          echo "::set-output name=status::${{ fromJson(steps.step1.outputs.body).status }}"
+          
+      - name: Check status
+        id: step3
+        if: ${{ steps.step2.outputs.status >= 400 }}
+        run: |
+          echo "Search for appointment did not yield any result"
+          exit 1
           
 #   job2:
 #     runs-on: ubuntu-latest
