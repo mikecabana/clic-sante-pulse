@@ -22,6 +22,10 @@ jobs:
           --header 'Authorization: Basic ${{ secrets.BASIC_TOKEN }}' \
           --data-raw '{"nam": "${{ secrets.APT_ID }}", "phone": "${{ secrets.APT_PHONE }}"}')"
           
+      - name: Echo body
+        id: step2
+        run: echo ${{ steps.step1.outputs.body }}
+          
   job2:
     runs-on: ubuntu-latest
     needs: job1
