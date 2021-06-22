@@ -19,7 +19,7 @@ jobs:
           echo "::set-output name=body:: \
           $(curl --request POST \
           --url 'https://api3.clicsante.ca/v3/appointments/jobs' \
-          --header 'Authorization: Basic {{ secrets.BASIC_TOKEN }}' \
+          --header 'Authorization: Basic ${{ secrets.BASIC_TOKEN }}' \
           --data-raw '{"nam": "${{ secrets.APT_ID }}", "phone": "${{ secrets.APT_PHONE }}"}')"
           
   job2:
