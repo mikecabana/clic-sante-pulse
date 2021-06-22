@@ -25,7 +25,6 @@ jobs:
         id: step2
         run: |
           echo "${{ steps.step1.outputs.response }}"
-          echo "${{ fromJson(steps.step1.outputs.response) }}"
           
 #   job2:
 #     runs-on: ubuntu-latest
