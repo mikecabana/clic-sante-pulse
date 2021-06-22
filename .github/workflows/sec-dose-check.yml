@@ -10,8 +10,6 @@ jobs:
   # cron:
   job1:
     runs-on: ubuntu-latest
-    outputs:
-      body: ${{ steps.step2.outputs.body }}
     steps:
       - name: Ping appointment
         id: step1
@@ -21,11 +19,13 @@ jobs:
             --header 'Authorization: Basic ${{ secrets.BASIC_TOKEN }}' \
             --data-raw '{"nam":"${{ secrets.APT_ID }}","phone":"${{ secrets.APT_PHONE }}"}' -s)
           echo $response
+          echo "::set-output name=response::$response"
           
-#       - name: Echo output
-#         id: step2
-#         run: |
-#          echo "${{ env.JSON_RESPONSE }}"
+      - name: Echo output
+        id: step2
+        run: |
+          echo "${{ steps.step1.outputs.response }}"
+          echo "${{ fromJson(steps.step1.outputs.response) }}"
           
 #   job2:
 #     runs-on: ubuntu-latest
