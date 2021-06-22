@@ -33,17 +33,17 @@ jobs:
         uses: dawidd6/action-send-mail@v3.2.0
         with:
           # SMTP server address
-          server_address: '{{ secrets.EMAIL_SMTP_SERVER }}'
+          server_address: ${{ secrets.EMAIL_SMTP_SERVER }}
           # SMTP server port
-          server_port: '{{ secrets.EMAIL_PORT }}'
+          server_port: ${{ secrets.EMAIL_PORT }}
           # Authenticate as this user to SMTP server
-          username: '{{ secrets.EMAIL }}'
+          username: ${{ secrets.EMAIL }}
           # Authenticate with this password to SMTP server
-          password: '{{ secrets.EMAIL_PASSWORD }}'
+          password: ${{ secrets.EMAIL_PASSWORD }}
           # Subject of mail message
           subject: Vaccine 2nd Dose Ping
           # Recipients mail addresses (separated with comma)
-          to: '{{ secrets.EMAIL_TO }}'
+          to: ${{ secrets.EMAIL_TO }}
           # Full name of mail sender (might be with an email address specified in <>)
           from: Dose Ping<dose.ping@mikecabana.com>
           # Whether this connection use TLS (default is true if server_port is 465)
