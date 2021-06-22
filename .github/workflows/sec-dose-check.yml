@@ -29,6 +29,11 @@ jobs:
       - name: Echo response
         id: step3
         run: |
+          echo $response
+          
+      - name: Echo output
+        id: step4
+        run: |
           echo ${{ steps.step2.outputs.body }}
           
   job2:
