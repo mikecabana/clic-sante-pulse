@@ -18,13 +18,16 @@ jobs:
             --request POST \
             --header 'Authorization: Basic ${{ secrets.BASIC_TOKEN }}' \
             --data-raw '{"nam":"${{ secrets.APT_ID }}","phone":"${{ secrets.APT_PHONE }}"}' -s)
+          response="${response//'%'/'%25'}"
+          response="${response//$'\n'/'%0A'}"
+          response="${response//$'\r'/'%0D'}"
           echo $response
-          echo "::set-output name=response::$response"
+          echo "::set-output name=body::$response"
           
       - name: Echo output
         id: step2
         run: |
-          echo "${{ steps.step1.outputs.response }}"
+          echo "${{ steps.step1.outputs.body }}"
           
 #   job2:
 #     runs-on: ubuntu-latest
