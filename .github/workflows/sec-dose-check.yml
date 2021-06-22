@@ -16,25 +16,17 @@ jobs:
       - name: Ping appointment
         id: step1
         run: |
-          response=$(curl --url https://api3.clicsante.ca/v3/appointments/jobs \
-          --request POST \
-          --header 'Authorization: Basic cHVibGljQHRyaW1vei5jb206MTIzNDU2Nzgh' \
-          --data-raw '{"nam":"CABM91101016","phone":"5146901734"}' -s)
-      
-      - name: Output response
-        id: step2
-        run: |
-          echo "::set-output name=body::$(echo $response)"
-          
-      - name: Echo response
-        id: step3
-        run: |
-          echo $response
+          echo 'JSON_RESPONSE<<EOF' >> $GITHUB_ENV
+          curl --url https://api3.clicsante.ca/v3/appointments/jobs \
+            --request POST \
+            --header 'Authorization: Basic ${{ secrets.BASIC_TOKEN }}' \
+            --data-raw '{"nam":"${{ secrets.APT_ID }}","phone":"${{ secrets.APT_PHONE }}"}' -s >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
           
       - name: Echo output
-        id: step4
+        id: step2
         run: |
-          echo ${{ steps.step2.outputs.body }}
+          echo "${{ env.JSON_RESPONSE }}"
           
   job2:
     runs-on: ubuntu-latest
