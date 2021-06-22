@@ -11,20 +11,25 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     outputs:
-      body: ${{ steps.step1.outputs.body }}
+      body: ${{ steps.step2.outputs.body }}
     steps:
       - name: Ping appointment
         id: step1
         run: |
-          echo "::set-output name=body:: \
-          $(curl --request POST \
-          --url 'https://api3.clicsante.ca/v3/appointments/jobs' \
-          --header 'Authorization: Basic ${{ secrets.BASIC_TOKEN }}' \
-          --data-raw '{"nam": "${{ secrets.APT_ID }}", "phone": "${{ secrets.APT_PHONE }}"}')"
-          
-      - name: Echo body
+          response=$(curl --url https://api3.clicsante.ca/v3/appointments/jobs \
+          --request POST \
+          --header 'Authorization: Basic cHVibGljQHRyaW1vei5jb206MTIzNDU2Nzgh' \
+          --data-raw '{"nam":"CABM91101016","phone":"5146901734"}' -s)
+      
+      - name: Output response
         id: step2
-        run: echo ${{ steps.step1.outputs.body }}
+        run: |
+          echo "::set-output name=body::$(echo $response)"
+          
+      - name: Echo response
+        id: step3
+        run: |
+          echo ${{ steps.step2.outputs.body }}
           
   job2:
     runs-on: ubuntu-latest
