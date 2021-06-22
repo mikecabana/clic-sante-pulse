@@ -17,10 +17,10 @@ jobs:
         id: step1
         run: |
           echo "::set-output name=body:: \
-          curl --request POST \
+          $(curl --request POST \
           --url 'https://api3.clicsante.ca/v3/appointments/jobs' \
           --header 'Authorization: Basic {{ secrets.BASIC_TOKEN }}' \
-          --data-raw '{"nam": "${{ secrets.APT_ID }}", "phone": "${{ secrets.APT_PHONE }}"}'"
+          --data-raw '{"nam": "${{ secrets.APT_ID }}", "phone": "${{ secrets.APT_PHONE }}"}')"
           
   job2:
     runs-on: ubuntu-latest
